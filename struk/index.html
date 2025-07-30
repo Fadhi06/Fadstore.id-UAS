@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Struk Pembelian</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; }
+    .navbar { background-color: #a3c9f1; padding: 10px; text-align: center; }
+    .navbar a { color: #003366; margin: 0 10px; text-decoration: none; font-weight: bold; }
+    .container {
+      max-width: 600px; margin: 40px auto; background: #fff;
+      padding: 30px; border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { color: #003366; text-align: center; }
+    p { font-size: 16px; margin: 8px 0; }
+    .footer { text-align: center; padding: 20px; background: #003366; color: white; margin-top: 40px; }
+    button {
+      margin-top: 20px; background: #28a745; color: white;
+      border: none; padding: 10px 20px; font-size: 16px;
+      border-radius: 5px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="../index.html">Home</a>
+    <a href="../transaksi/index.html">Transaksi</a>
+    <a href="index.html">Struk</a>
+    <a href="../tentang/index.html">Tentang Kami</a>
+    <a href="../kontak/index.html">Kontak</a>
+  </div>
+
+  <div class="container">
+    <h2>Struk Transaksi</h2>
+    <p>ID Transaksi: <span id="id"></span></p>
+    <p>Nama: <span id="nama"></span></p>
+    <p>Alamat: <span id="alamat"></span></p>
+    <p>Barang: <span id="barang"></span></p>
+    <p>Harga Satuan: <span id="harga"></span></p>
+    <p>Jumlah Barang: <span id="jumlah"></span></p>
+    <p>Total Bayar: <span id="total"></span></p>
+    <button onclick="cetakPDF()">Cetak PDF</button>
+  </div>
+
+  <div class="footer">&copy; 2025 fadstore.ID</div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("strukData"));
+    if (data) {
+      document.getElementById("id").textContent = data.id;
+      document.getElementById("nama").textContent = data.nama;
+      document.getElementById("alamat").textContent = data.alamat;
+      document.getElementById("barang").textContent = data.barang;
+      document.getElementById("harga").textContent = "Rp " + data.harga.toLocaleString("id-ID");
+      document.getElementById("jumlah").textContent = data.jumlah;
+      document.getElementById("total").textContent = "Rp " + data.total.toLocaleString("id-ID");
+    }
+
+    function cetakPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("Struk Pembelian - fadstore.ID", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`ID Transaksi: ${data.id}`, 20, 35);
+      doc.text(`Nama: ${data.nama}`, 20, 43);
+      doc.text(`Alamat: ${data.alamat}`, 20, 51);
+      doc.text(`Barang: ${data.barang}`, 20, 59);
+      doc.text(`Harga: Rp ${data.harga.toLocaleString('id-ID')}`, 20, 67);
+      doc.text(`Jumlah: ${data.jumlah}`, 20, 75);
+      doc.text(`Total: Rp ${data.total.toLocaleString('id-ID')}`, 20, 83);
+      doc.save(`struk_${data.id}.pdf`);
+    }
+  </script>
+</body>
+</html>
